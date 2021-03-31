@@ -92,8 +92,19 @@ app.get("/movies/add", (req, res) => {
 app.get("/movies/edit", (req, res) => {
   res.send({ status: 200, message: "ok" });
 });
-app.get("/movies/delete", (req, res) => {
-  res.send({ status: 200, message: "ok" });
+app.get("/movies/delete/:id", (req, res) => {
+  let id = req.params.id;
+  //res.send(Object.values(movies)[id - 1]);
+  if (Object.values(movies)[id - 1] != null) {
+    movies.splice(id - 1, 1);
+    res.send({ status: 200, data: movies });
+  } else {
+    res.send({
+      status: 404,
+      error: true,
+      message: "the movie id " + id + " does not exist",
+    });
+  }
 });
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
