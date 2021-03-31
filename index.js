@@ -39,10 +39,7 @@ app.get("/search", (req, res) => {
     res.send({ status: 200, message: "ok", data: req.query["s"] });
   }
 });
-app.get("/movies/create", (req, res) => {
-  res.send({ status: 200, message: "ok" });
-});
-app.get("/movies/read/:input", (req, res) => {
+app.get("/movies/get/:input", (req, res) => {
   if (req.params.input === "by-date") {
     // res.send(req.params.input);
     res.send({ status: 200, data: sortobject(movies, "year") });
@@ -55,7 +52,44 @@ app.get("/movies/read/:input", (req, res) => {
   }
   //res.send({ status: 200, data: movies });
 });
-app.get("/movies/update", (req, res) => {
+app.get("/movies/read/id/:id", (req, res) => {
+  let id = req.params.id;
+  //res.send(Object.values(movies)[id - 1]);
+  if (Object.values(movies)[id - 1] != null) {
+    res.send({ status: 200, data: Object.values(movies)[id - 1] });
+  } else {
+    res.send({
+      status: 404,
+      error: true,
+      message: "the movie id " + id + " does not exist",
+    });
+  }
+});
+
+app.get("/movies/add", (req, res) => {
+  let title = req.query.title;
+  let year = req.query.year;
+  let rating = req.query.rating;
+  if (
+    title == null ||
+    year == null ||
+    year.toString().length < 4 ||
+    isNaN(year)
+  ) {
+    res.send({
+      status: 403,
+      error: true,
+      message: "you cannot create a movie without providing a title and a year",
+    });
+  } else if (rating == null) {
+    movies.push({ title: title, year: year, rating: 4 });
+    res.send({ status: 200, data: movies });
+  } else {
+    movies.push({ title: title, year: year, rating: rating });
+    res.send({ status: 200, data: movies });
+  }
+});
+app.get("/movies/edit", (req, res) => {
   res.send({ status: 200, message: "ok" });
 });
 app.get("/movies/delete", (req, res) => {
