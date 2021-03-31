@@ -8,6 +8,20 @@ app.get("/", (req, res) => {
 app.get("/test", (req, res) => {
   res.send({ status: 200, message: "ok" });
 });
+app.get("/hello/:id", (req, res) => {
+  res.send("hello " + req.params.id);
+});
+app.get("/search", (req, res) => {
+  if (!req.query["s"]) {
+    res.send({
+      status: 500,
+      error: true,
+      message: "you have to provide a search",
+    });
+  } else {
+    res.send({ status: 200, message: "ok", data: req.query["s"] });
+  }
+});
 app.get("/time", (req, res) => {
   let ts = new Date(Date.now());
 
